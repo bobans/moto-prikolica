@@ -32,6 +32,22 @@
     footer { background: #111; color: #aaa; text-align: center; padding: 25px 10px; font-size: 0.9rem; }
 
     .contact p { margin-bottom: 8px; }
+
+    /* Stilovi za kontakt formu */
+    .contact-form { background: #fff; border-radius: 14px; padding: 35px; box-shadow: 0 6px 18px rgba(0,0,0,0.1); max-width: 600px; margin: 30px auto; }
+    .contact-form .form-group { margin-bottom: 20px; }
+    .contact-form label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+    .contact-form input,
+    .contact-form textarea { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s; }
+    .contact-form input:focus,
+    .contact-form textarea:focus { outline: none; border-color: #e63946; }
+    .contact-form textarea { resize: vertical; min-height: 120px; font-family: Arial, Helvetica, sans-serif; }
+    .contact-form button { width: 100%; background: #e63946; color: #fff; padding: 14px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+    .contact-form button:hover { background: #d32f3e; }
+    .contact-form button:active { transform: scale(0.98); }
+    .contact-form .success-message { background: #4caf50; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; text-align: center; }
+    .contact-form .success-message.show { display: block; }
+    .contact-form small { color: #666; font-size: 0.9rem; }
   </style>
 </head>
 <body>
@@ -79,10 +95,53 @@
   </div>
 </section>
 
+<section>
+  <h2>Pošaljite upit</h2>
+  <p style="text-align:center; margin-bottom:20px; color:#666;">Popunite formu i odgovorićemo vam u najkraćem roku</p>
+  
+  <div class="contact-form">
+    <div class="success-message" id="successMessage">
+      ✓ Hvala! Vaša poruka je uspešno poslata. Kontaktiraćemo vas uskoro.
+    </div>
+    
+    <form action="https://formspree.io/f/xeeojaar" method="POST" id="contactForm">
+      <div class="form-group">
+        <label for="name">Vaše ime *</label>
+        <input type="text" id="name" name="name" required placeholder="Unesite vaše ime">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email adresa *</label>
+        <input type="email" id="email" name="email" required placeholder="vas@email.com">
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Telefon</label>
+        <input type="tel" id="phone" name="phone" placeholder="064 123 4567">
+      </div>
+
+      <div class="form-group">
+        <label for="dates">Željeni period iznajmljivanja</label>
+        <input type="text" id="dates" name="dates" placeholder="npr. 15-17. januar">
+      </div>
+
+      <div class="form-group">
+        <label for="message">Poruka *</label>
+        <textarea id="message" name="message" required placeholder="Napišite vašu poruku ili pitanje..."></textarea>
+      </div>
+
+      <button type="submit">Pošalji upit</button>
+      
+      <p style="margin-top:15px; text-align:center;">
+        <small>* Obavezna polja</small>
+      </p>
+    </form>
+  </div>
+</section>
+
 <section class="contact">
-  <h2>Kontakt i rezervacije</h2>
+  <h2>Ili nas pozovite direktno</h2>
   <p><strong>Telefon:</strong><br/>Boban: 064 087 0285<br/>Milan: 060 057 0551</p>
-  <!-- <p><strong>Email:</strong> kontakt@email.rs</p> -->
   <p><strong>Lokacija:</strong> Niš, Srbija</p>
 </section>
 
@@ -99,7 +158,27 @@
   <p>© 2025 Iznajmljivanje prikolice za motor. Sva prava zadržana.</p>
 </footer>
 
-
+<script>
+  // Opciono: Prikaz success poruke nakon slanja forme
+  const form = document.getElementById('contactForm');
+  const successMessage = document.getElementById('successMessage');
+  
+  form.addEventListener('submit', function(e) {
+    // Forma će biti automatski poslata na Formspree
+    // Ovaj kod samo prikazuje poruku ako je forma validna
+    if (form.checkValidity()) {
+      setTimeout(function() {
+        successMessage.classList.add('show');
+        form.reset();
+        
+        // Sakrij poruku nakon 5 sekundi
+        setTimeout(function() {
+          successMessage.classList.remove('show');
+        }, 5000);
+      }, 1000);
+    }
+  });
+</script>
 
 </body>
 </html>
