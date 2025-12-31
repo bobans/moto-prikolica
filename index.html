@@ -104,7 +104,7 @@
       ✓ Hvala! Vaša poruka je uspešno poslata. Kontaktiraćemo vas uskoro.
     </div>
     
-    <form action="https://formspree.io/f/xeeojaar" method="POST" id="contactForm">
+    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" id="contactForm">
       <div class="form-group">
         <label for="name">Vaše ime *</label>
         <input type="text" id="name" name="name" required placeholder="Unesite vaše ime">
@@ -159,23 +159,59 @@
 </footer>
 
 <script>
-  // Opciono: Prikaz success poruke nakon slanja forme
   const form = document.getElementById('contactForm');
   const successMessage = document.getElementById('successMessage');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton.textContent;
   
-  form.addEventListener('submit', function(e) {
-    // Forma će biti automatski poslata na Formspree
-    // Ovaj kod samo prikazuje poruku ako je forma validna
-    if (form.checkValidity()) {
-      setTimeout(function() {
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault(); // Sprečava prelazak na drugu stranu
+    
+    // Promeni tekst dugmeta tokom slanja
+    submitButton.textContent = 'Šaljem...';
+    submitButton.disabled = true;
+    
+    // Uzmi podatke iz forme
+    const formData = new FormData(form);
+    
+    try {
+      // Pošalji podatke na Formspree preko fetch API-ja
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        // Uspešno poslato
+        successMessage.textContent = '✓ Hvala! Vaša poruka je uspešno poslata. Kontaktiraćemo vas uskoro.';
+        successMessage.style.background = '#4caf50';
         successMessage.classList.add('show');
         form.reset();
         
-        // Sakrij poruku nakon 5 sekundi
+        // Sakrij poruku nakon 7 sekundi
         setTimeout(function() {
           successMessage.classList.remove('show');
-        }, 5000);
-      }, 1000);
+        }, 7000);
+      } else {
+        // Greška pri slanju
+        throw new Error('Greška pri slanju');
+      }
+    } catch (error) {
+      // Prikaži poruku o grešci
+      successMessage.textContent = '✗ Došlo je do greške. Molimo pokušajte ponovo ili nas pozovite direktno.';
+      successMessage.style.background = '#f44336';
+      successMessage.classList.add('show');
+      
+      setTimeout(function() {
+        successMessage.classList.remove('show');
+      }, 7000);
+    } finally {
+      // Vrati dugme u originalno stanje
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
     }
   });
 </script>
